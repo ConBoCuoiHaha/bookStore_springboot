@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Danh Mục Con - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Danh Sách Danh Mục Con</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row pb-3">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6 text-end">
+                        <a th:href="@{/admin/subcategory/upsert}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Thêm danh mục con mới
+                        </a>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tên danh mục con</th>
+                            <th>Thể loại cha</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="obj : ${subcategoryList}">
+                            <td th:text="${obj.name}"></td>
+                            <td th:text="${obj.category != null ? obj.category.name : 'N/A'}"></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a th:href="@{/admin/subcategory/upsert(id=${obj.id})}"
+                                        class="btn btn-primary mx-2">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
+                                    <a th:href="@{/admin/subcategory/delete/{id}(id=${obj.id})}"
+                                        class="btn btn-danger mx-2">
+                                        <i class="bi bi-trash-fill"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Người Dùng - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 my-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Quản Lý Người Dùng</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Họ Tên</th>
+                            <th>Email</th>
+                            <th>Số Điện Thoại</th>
+                            <th>Vai Trò</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div th:fragment="scripts">
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+            <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+            <script>
+                var dataTable;
+
+                $(document).ready(function () {
+                    loadDataTable();
+                });
+
+                function loadDataTable() {
+                    dataTable = $('#tblData').DataTable({
+                        "ajax": { url: '/admin/user/getall' },
+                        "columns": [
+                            { data: "name", "width": "20%" },
+                            { data: "email", "width": "20%" },
+                            { data: "phoneNumber", "width": "15%" },
+                            { data: "role", "width": "15%" },
+                            {
+                                data: "id",
+                                "render": function (data, type, row) {
+                                    if (row.isLocked) {
+                                        // Locked state
+                                        return `
+                                    <div class="text-center">
+                                         <a onclick=LockUnlock('${data}') class="btn btn-danger text-white border-0 py-2" style="cursor:pointer; width:100px;">
+                                            <i class="bi bi-lock-fill"></i> Khóa
+                                        </a>
+                                    </div>
+                                    `
+                                    }
+                                    else {
+                                        // Active state
+                                        return `
+                                    <div class="text-center">
+                                        <a onclick=LockUnlock('${data}') class="btn btn-success text-white border-0 py-2" style="cursor:pointer; width:100px;">
+                                            <i class="bi bi-unlock-fill"></i> Mở
+                                        </a>
+                                    </div>
+                                    `
+                                    }
+                                },
+                                "width": "30%"
+                            }
+                        ],
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json"
+                        }
+                    });
+                }
+
+                function LockUnlock(id) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/admin/user/lockunlock',
+                        data: JSON.stringify(id),
+                        contentType: "application/json",
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                dataTable.ajax.reload();
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    });
+                }
+            </script>
+        </div>
+</body>
+
+</html>

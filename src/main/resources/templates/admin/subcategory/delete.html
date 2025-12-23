@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Xóa Danh Mục Con - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Xóa Danh Mục Con</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/admin/subcategory/delete}" method="post" class="row">
+                    <input type="hidden" name="id" th:value="${subcategory.id}" />
+
+                    <div class="border p-3 text-center">
+                        <p class="fs-4">Bạn có chắc chắn muốn xóa danh mục con: <strong
+                                th:text="${subcategory.name}"></strong>?</p>
+                        <p class="text-danger small">Lưu ý: Hành động này không thể hoàn tác và có thể ảnh hưởng đến các
+                            sản phẩm thuộc danh mục này.</p>
+
+                        <div class="row pt-4 justify-content-center">
+                            <div class="col-6 col-md-3">
+                                <button type="submit" class="btn btn-danger form-control">
+                                    Xác nhận Xóa
+                                </button>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a th:href="@{/admin/subcategory}"
+                                    class="btn btn-outline-secondary border form-control">
+                                    Quay lại danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

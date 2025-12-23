@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Bảng Điều Khiển - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="container-fluid px-4">
+            <div class="row mt-4">
+                <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                    <h2 class="text-secondary opacity-75 mb-0">
+                        <i class="bi bi-speedometer2 me-2"></i>Bảng Điều Khiển Thống Kê
+                    </h2>
+                    <div class="d-flex align-items-center">
+                        <form th:action="@{/admin/dashboard}" method="get" class="d-flex align-items-center me-3">
+                            <div class="input-group input-group-sm me-2">
+                                <span class="input-group-text bg-light border-0">Từ</span>
+                                <input type="date" name="startDate"
+                                    th:value="${#temporals.format(dashboardVM.startDate, 'yyyy-MM-dd')}"
+                                    class="form-control border-0 shadow-sm" />
+                            </div>
+                            <div class="input-group input-group-sm me-2">
+                                <span class="input-group-text bg-light border-0">Đến</span>
+                                <input type="date" name="endDate"
+                                    th:value="${#temporals.format(dashboardVM.endDate, 'yyyy-MM-dd')}"
+                                    class="form-control border-0 shadow-sm" />
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-secondary shadow-sm">
+                                <i class="bi bi-filter"></i> Lọc
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-4 border-primary">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small text-uppercase mb-1 fw-bold">Tổng Doanh Thu</p>
+                                    <h3 class="mb-0 text-dark"
+                                        th:text="${#numbers.formatDecimal(dashboardVM.totalRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                    </h3>
+                                </div>
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-3 text-primary">
+                                    <i class="bi bi-cash-stack fs-3"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-4 border-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small text-uppercase mb-1 fw-bold">Tổng Đơn Hàng</p>
+                                    <h3 class="mb-0 text-dark" th:text="${dashboardVM.totalOrders}"></h3>
+                                </div>
+                                <div class="bg-success bg-opacity-10 p-3 rounded-3 text-success">
+                                    <i class="bi bi-bag-check fs-3"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-4 border-info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small text-uppercase mb-1 fw-bold">Tổng Sản Phẩm</p>
+                                    <h3 class="mb-0 text-dark" th:text="${dashboardVM.totalProducts}"></h3>
+                                </div>
+                                <div class="bg-info bg-opacity-10 p-3 rounded-3 text-info">
+                                    <i class="bi bi-book fs-3"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 bg-white border-start border-4 border-danger">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small text-uppercase mb-1 fw-bold">Hết Hàng</p>
+                                    <h3 class="mb-0 text-dark" th:text="${dashboardVM.outOfStockCount}"></h3>
+                                </div>
+                                <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-danger">
+                                    <i class="bi bi-exclamation-octagon fs-3"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="card-title mb-0 text-secondary">
+                                <i class="bi bi-graph-up me-2"></i>Doanh Thu Theo Thời Gian
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="card-title mb-0 text-secondary">
+                                <i class="bi bi-pie-chart me-2"></i>Tồn Kho Theo Thể Loại
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Details Table -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div
+                            class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0 text-secondary">
+                                <i class="bi bi-list-task me-2"></i>Báo Cáo Tồn Kho Chi Tiết
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="tblInventory" class="table table-hover align-middle w-100">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Tên Sách</th>
+                                            <th>Thể Loại</th>
+                                            <th>Đơn Giá</th>
+                                            <th>Số Lượng Tồn</th>
+                                            <th>Trạng Thái</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:fragment="scripts">
+            <!-- Add Scripts to a script section if needed, or just include them here -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+            <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+            <script th:inline="javascript">
+                $(document).ready(function () {
+                    var revenueLabels = /*[[${revenueLabels}]]*/[];
+                    var revenueValues = /*[[${revenueValues}]]*/[];
+                    var stockLabels = /*[[${stockLabels}]]*/[];
+                    var stockValues = /*[[${stockValues}]]*/[];
+
+                    // 1. Revenue Chart
+                    const revCtx = document.getElementById('revenueChart').getContext('2d');
+                    new Chart(revCtx, {
+                        type: 'line',
+                        data: {
+                            labels: revenueLabels,
+                            datasets: [{
+                                label: 'Doanh thu (VNĐ)',
+                                data: revenueValues,
+                                borderColor: '#6c757d',
+                                backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                borderWidth: 3,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#6c757d',
+                                pointBorderWidth: 2,
+                                pointRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { callback: function (value) { return value.toLocaleString() + 'đ'; } }
+                                }
+                            }
+                        }
+                    });
+
+                    // 2. Stock Chart
+                    const stockCtx = document.getElementById('stockChart').getContext('2d');
+                    new Chart(stockCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: stockLabels,
+                            datasets: [{
+                                data: stockValues,
+                                backgroundColor: [
+                                    '#adb5bd', '#6c757d', '#dee2e6', '#7d8e95', '#343a40'
+                                ],
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { position: 'bottom' } },
+                            cutout: '70%'
+                        }
+                    });
+
+                    // 3. Inventory DataTable
+                    $('#tblInventory').DataTable({
+                        ajax: { url: /*[[@{/admin/dashboard/inventory-details}]]*/ '/admin/dashboard/inventory-details' },
+                        dom: 'Bfrtip',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="bi bi-file-earmark-excel"></i> Excel',
+                                className: 'btn btn-sm btn-outline-success',
+                                title: 'Bao-Cao-Ton-Kho-' + new Date().toLocaleDateString()
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
+                                className: 'btn btn-sm btn-outline-danger',
+                                title: 'Bao-Cao-Ton-Kho-' + new Date().toLocaleDateString()
+                            },
+                            {
+                                extend: 'print',
+                                text: '<i class="bi bi-printer"></i> In',
+                                className: 'btn btn-sm btn-outline-secondary'
+                            }
+                        ],
+                        columns: [
+                            { data: 'title' },
+                            {
+                                data: 'category',
+                                render: function (data, type, row) {
+                                    return `<span class="small text-muted">${data} / ${row.subcategory}</span>`;
+                                }
+                            },
+                            {
+                                data: 'price',
+                                render: $.fn.dataTable.render.number(',', '.', 0, '', 'đ')
+                            },
+                            { data: 'stock', className: 'text-center fw-bold' },
+                            {
+                                data: 'stock',
+                                render: function (data) {
+                                    if (data <= 0) return '<span class="badge bg-danger rounded-pill">Hết hàng</span>';
+                                    if (data <= 10) return '<span class="badge bg-warning rounded-pill text-dark">Sắp hết</span>';
+                                    return '<span class="badge bg-success rounded-pill">Sẵn sàng</span>';
+                                }
+                            }
+                        ],
+                        order: [[3, 'asc']],
+                        pageLength: 10,
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+                        }
+                    });
+                });
+            </script>
+        </div>
+</body>
+
+</html>

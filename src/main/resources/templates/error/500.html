@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Server Error - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Server error</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="mb-3">An unexpected error occurred. Please try again.</p>
+                <a th:href="@{/}" class="btn btn-primary">Back to home</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

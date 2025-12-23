@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Đăng Nhập - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-primary bg-gradient text-white text-center py-4">
+                        <h4 class="mb-0">Đăng Nhập</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <p th:if="${param.error}" class="text-danger text-center">Email hoặc mật khẩu không chính xác.
+                        </p>
+                        <p th:if="${param.logout}" class="text-success text-center">Bạn đã đăng xuất thành công.</p>
+
+                        <form th:action="@{/login}" method="post">
+                            <div class="form-floating mb-3">
+                                <input type="email" name="username" class="form-control" id="email"
+                                    placeholder="name@example.com" required>
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="form-floating mb-4">
+                                <input type="password" name="password" class="form-control" id="password"
+                                    placeholder="Mật khẩu" required>
+                                <label for="password">Mật khẩu</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fs-5 bg-gradient border-0">Đăng
+                                Nhập</button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3 bg-light">
+                        <span>Chưa có tài khoản? <a th:href="@{/register}"
+                                class="text-primary text-decoration-none fw-bold">Đăng ký ngay</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

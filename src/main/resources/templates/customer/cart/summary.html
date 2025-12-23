@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Xác Nhận Đặt Hàng - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <form th:action="@{/customer/cart/summary}" th:object="${cartVM}" method="post">
+            <br />
+            <div class="container">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-primary bg-gradient text-light py-4">
+                        <div class="row px-4">
+                            <div class="col-6">
+                                <h5 class="pt-2 text-white">
+                                    Xác Nhận Đặt Hàng
+                                </h5>
+                            </div>
+                            <div class="col-6 text-end">
+                                <a th:href="@{/customer/cart}" class="btn btn-outline-danger btn-sm text-white">Quay lại
+                                    giỏ hàng</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container rounded p-2">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 pb-4">
+                                    <div class="row">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Thông Tin Người Nhận:</span>
+                                        </h4>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Họ Tên</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.name}" class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.name')}"
+                                                th:errors="*{orderHeader.name}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Số Điện Thoại</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.phoneNumber}" class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.phoneNumber')}"
+                                                th:errors="*{orderHeader.phoneNumber}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Địa Chỉ</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.streetAddress}" class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.streetAddress')}"
+                                                th:errors="*{orderHeader.streetAddress}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Thành Phố</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.city}" class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.city')}"
+                                                th:errors="*{orderHeader.city}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Mã Bưu Điện</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.postalCode}" class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.postalCode')}"
+                                                th:errors="*{orderHeader.postalCode}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+                                    <div class="row">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Mã Giảm Giá:</span>
+                                        </h4>
+                                        <div class="col-12">
+                                            <div class="input-group mb-3">
+                                                <input th:field="*{orderHeader.promoCode}" class="form-control"
+                                                    placeholder="Nhập mã khuyến mãi (Thử mã: DOCSACH)" />
+                                                <span class="input-group-text bg-info text-white">10% Off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+                                    <div class="row">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Thanh Toán Demo:</span>
+                                        </h4>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle-fill"></i> Đây là bản demo. Vui lòng
+                                            nhập số thẻ (10 hoặc 16 số) để xác nhận.
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Số Thẻ</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.cardNumber}"
+                                                placeholder="Nhập 16 số thẻ (Ví dụ: 1234 5678 9012 3456)"
+                                                class="form-control" />
+                                            <span th:if="${#fields.hasErrors('orderHeader.cardNumber')}"
+                                                th:errors="*{orderHeader.cardNumber}" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Chủ Thẻ</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input th:field="*{orderHeader.cardHolderName}"
+                                                placeholder="Tên in trên thẻ" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-5 offset-lg-1">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-info">Chi Tiết Đơn Hàng:</span>
+                                    </h4>
+                                    <ul class="list-group mb-3">
+                                        <li th:each="details : ${cartVM.shoppingCartList}"
+                                            class="list-group-item d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="my-0" th:text="${details.product.title}"></h6>
+                                                <small class="text-muted">Số lượng: <span
+                                                        th:text="${details.count}"></span></small>
+                                            </div>
+                                            <span class="text-muted"
+                                                th:text="${#numbers.formatDecimal(details.price * details.count, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between bg-light">
+                                            <small class="text-info">Tổng cộng (VNĐ)</small>
+                                            <strong class="text-info"
+                                                th:text="${#numbers.formatDecimal(cartVM.orderHeader.orderTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 col-md-8 pt-2">
+                                <p style="color:maroon; font-size:14px;">Ngày dự kiến nhận hàng:
+                                    <span
+                                        th:text="${#temporals.format(#temporals.createNow().plusDays(3), 'dd/MM/yyyy')}"></span>
+                                    -
+                                    <span
+                                        th:text="${#temporals.format(#temporals.createNow().plusDays(7), 'dd/MM/yyyy')}"></span>
+                                </p>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <button type="submit" class="btn btn-primary form-control">Xác Nhận Đặt Hàng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

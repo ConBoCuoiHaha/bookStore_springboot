@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Chi Tiết Đơn Hàng - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4 mb-5">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h4 class="text-secondary opacity-75 mb-0">
+                            <i class="bi bi-info-circle me-2"></i>Chi Tiết Đơn Hàng #<span
+                                th:text="${orderHeader.id}"></span>
+                        </h4>
+                    </div>
+                    <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
+                        <a th:href="@{/customer/order}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <!-- Order Status Step Bar -->
+                    <div class="col-12 mb-5 mt-2">
+                        <div class="d-flex justify-content-between position-relative status-bar">
+                            <div class="text-center" style="z-index: 1;">
+                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <span class="small fw-bold">Đã đặt hàng</span>
+                            </div>
+                            <div class="text-center" style="z-index: 1;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
+                                    th:classappend="${orderHeader.orderStatus == 'InProcess' || orderHeader.orderStatus == 'Shipped' ? 'bg-success text-white' : 'bg-light text-muted'}"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-gear"></i>
+                                </div>
+                                <span class="small fw-bold">Đang xử lý</span>
+                            </div>
+                            <div class="text-center" style="z-index: 1;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
+                                    th:classappend="${orderHeader.orderStatus == 'Shipped' ? 'bg-success text-white' : 'bg-light text-muted'}"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-truck"></i>
+                                </div>
+                                <span class="small fw-bold">Đang giao</span>
+                            </div>
+                            <div th:if="${orderHeader.orderStatus == 'Cancelled'}" class="text-center"
+                                style="z-index: 1;">
+                                <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center mx-auto mb-2"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-x-lg"></i>
+                                </div>
+                                <span class="small fw-bold text-danger">Đã hủy</span>
+                            </div>
+                            <div th:unless="${orderHeader.orderStatus == 'Cancelled'}" class="text-center"
+                                style="z-index: 1;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
+                                    th:classappend="${orderHeader.orderStatus == 'Shipped' ? 'bg-success text-white' : 'bg-light text-muted'}"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-house-door"></i>
+                                </div>
+                                <span class="small fw-bold">Đã nhận</span>
+                            </div>
+                            <!-- Connecting line -->
+                            <div class="position-absolute top-50 start-0 translate-middle-y w-100 bg-light"
+                                style="height: 4px; z-index: 0; margin-top: -15px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-7 pb-4">
+                        <h5 class="text-secondary border-bottom pb-2 mb-3">Thông Tin Giao Hàng</h5>
+                        <div class="row my-2">
+                            <div class="col-4 fw-bold">Người nhận:</div>
+                            <div class="col-8" th:text="${orderHeader.name}"></div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-4 fw-bold">Số điện thoại:</div>
+                            <div class="col-8" th:text="${orderHeader.phoneNumber}"></div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-4 fw-bold">Địa chỉ:</div>
+                            <div class="col-8" th:text="${orderHeader.streetAddress} + ', ' + ${orderHeader.city}">
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-4 fw-bold">Trạng thái ship:</div>
+                            <div class="col-8">
+                                <span th:if="${orderHeader.orderStatus == 'Shipped'}" class="text-success fw-bold"><i
+                                        class="bi bi-truck me-1"></i>Đã giao cho đơn vị vận chuyển</span>
+                                <span th:if="${orderHeader.orderStatus == 'Cancelled'}" class="text-danger fw-bold">Đã
+                                    hủy đơn hàng</span>
+                                <span
+                                    th:if="${orderHeader.orderStatus != 'Shipped' && orderHeader.orderStatus != 'Cancelled'}"
+                                    class="text-info fw-bold">Đang chuẩn bị hàng</span>
+                            </div>
+                        </div>
+                        <div th:if="${orderHeader.carrier != null && !orderHeader.carrier.isEmpty()}"
+                            class="card mt-3 border-0 bg-light rounded-3">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold"><i class="bi bi-box-seam me-2"></i>Thông tin vận đơn</h6>
+                                <p class="mb-1 small">Đơn vị: <strong th:text="${orderHeader.carrier}"></strong></p>
+                                <p class="mb-0 small">Mã tra cứu: <strong class="text-primary"
+                                        th:text="${orderHeader.trackingNumber}"></strong></p>
+                                <p th:if="${orderHeader.shippingDate != null}" class="mb-0 small">Ngày giao: <span
+                                        th:text="${#temporals.format(orderHeader.shippingDate, 'dd/MM/yyyy')}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-5">
+                        <h5 class="text-secondary border-bottom pb-2 mb-3">Tóm Tắt Đơn Hàng</h5>
+                        <ul class="list-group list-group-flush shadow-sm rounded-3 overflow-hidden">
+                            <li th:each="detail : ${orderDetails}"
+                                class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div class="me-auto">
+                                    <h6 class="my-0 fw-bold" th:text="${detail.product.title}"></h6>
+                                    <small class="text-muted"
+                                        th:text="'SL: ' + ${detail.count} + ' x ' + ${#numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></small>
+                                </div>
+                                <span class="fw-bold"
+                                    th:text="${#numbers.formatDecimal(detail.count * detail.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                            </li>
+                            <li th:if="${orderHeader.discountAmount > 0}"
+                                class="list-group-item d-flex justify-content-between bg-light">
+                                <small class="text-success fw-bold"
+                                    th:text="'Khuyến mãi (' + ${orderHeader.promoCode} + ')'"></small>
+                                <strong class="text-success"
+                                    th:text="'-' + ${#numbers.formatDecimal(orderHeader.discountAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-primary bg-opacity-10 py-3">
+                                <span class="fw-bold">TỔNG CỘNG</span>
+                                <h5 class="mb-0 fw-bold"
+                                    th:text="${#numbers.formatDecimal(orderHeader.orderTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                </h5>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .status-bar .rounded-circle {
+                border: 2px solid #fff;
+                box-shadow: 0 0 0 4px #f8f9fa;
+            }
+        </style>
+    </div>
+</body>
+
+</html>

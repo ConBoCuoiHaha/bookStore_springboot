@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Vận Chuyển - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-6">
+                        <h2 class="text-secondary opacity-75 py-2"><i class="bi bi-truck me-2"></i>Quản Lý Vận Chuyển
+                        </h2>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown">
+                                Lọc Trạng Thái
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="filterTable('All')">Tất cả</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="filterTable('Approved')">Chờ xác nhận</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="filterTable('InProcess')">Đang xử lý</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="filterTable('Shipped')">Đã giao hàng</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table id="tblShipping" class="table table-hover align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Đơn Hàng</th>
+                                <th>Khách Hàng</th>
+                                <th>Địa Chỉ Giao Hàng</th>
+                                <th>Trạng Thái</th>
+                                <th>Thông Tin Vận Chuyển</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orderList}" class="order-row"
+                                th:attr="data-status=${order.orderStatus}">
+                                <td>
+                                    <strong th:text="'#' + ${order.id}"></strong><br />
+                                    <small class="text-muted"
+                                        th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy')}"></small>
+                                </td>
+                                <td>
+                                    <span th:text="${order.name}"></span><br />
+                                    <small th:text="${order.phoneNumber}"></small>
+                                </td>
+                                <td>
+                                    <span class="small" th:text="${order.streetAddress} + ', ' + ${order.city}"></span>
+                                </td>
+                                <td>
+                                    <span th:if="${order.orderStatus == 'Approved'}"
+                                        class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                    <span th:if="${order.orderStatus == 'InProcess'}"
+                                        class="badge bg-info text-dark">Đang xử lý</span>
+                                    <span th:if="${order.orderStatus == 'Shipped'}" class="badge bg-success">Đã giao
+                                        hàng</span>
+                                </td>
+                                <td>
+                                    <form th:action="@{/admin/shipping/updateCarrier}" method="post"
+                                        th:id="'form-' + ${order.id}">
+                                        <input type="hidden" name="orderId" th:value="${order.id}" />
+                                        <div class="input-group input-group-sm mb-1">
+                                            <span class="input-group-text" style="width: 85px;">Đơn vị</span>
+                                            <input type="text" name="carrier" th:value="${order.carrier}"
+                                                class="form-control" placeholder="GHTK, Viettel..." />
+                                        </div>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text" style="width: 85px;">Mã vận</span>
+                                            <input type="text" name="trackingNumber" th:value="${order.trackingNumber}"
+                                                class="form-control" placeholder="Mã tra cứu..." />
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="submit" th:form="'form-' + ${order.id}"
+                                            class="btn btn-sm btn-primary" title="Cập nhật vận chuyển">
+                                            <i class="bi bi-save"></i>
+                                        </button>
+                                        <a th:href="@{/admin/order/details/{id}(id=${order.id})}"
+                                            class="btn btn-sm btn-outline-secondary" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function filterTable(status) {
+                const rows = document.querySelectorAll('.order-row');
+                rows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    if (status === 'All' || rowStatus === status) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        </script>
+    </div>
+</body>
+
+</html>

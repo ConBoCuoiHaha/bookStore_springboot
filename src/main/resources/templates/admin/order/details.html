@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Chi Tiết Đơn Hàng - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <form th:action="@{/admin/order/updateStatus}" method="post">
+            <input name="id" th:value="${orderHeader.id}" type="hidden" />
+            <br />
+            <div class="container">
+                <div class="card shadow border-0 mt-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <div class="row px-4">
+                            <div class="col-6 text-secondary">
+                                <i class="bi bi-cart-fill me-2"></i> Chi tiết đơn hàng
+                            </div>
+                            <div class="col-6 text-end">
+                                <a th:href="@{/admin/order}"
+                                    class="btn btn-outline-secondary btn-sm text-uppercase">Quay lại</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container rounded p-2">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 pb-4">
+                                    <div class="row">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-primary">Thông tin nhận hàng:</span>
+                                        </h4>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Họ tên</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.name}" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Số điện thoại</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.phoneNumber}" class="form-control"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Địa chỉ</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.streetAddress}" class="form-control"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Thành phố</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.city}" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Mã bưu điện</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.postalCode}" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Email</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.applicationUser.email}" readonly
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Ngày đặt</div>
+                                        <div class="col-9">
+                                            <input
+                                                th:value="${#temporals.format(orderHeader.orderDate, 'dd/MM/yyyy HH:mm')}"
+                                                readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Vận chuyển</div>
+                                        <div class="col-9">
+                                            <input name="carrier" th:value="${orderHeader.carrier}" id="carrier"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">Mã vận đơn</div>
+                                        <div class="col-9">
+                                            <input name="trackingNumber" th:value="${orderHeader.trackingNumber}"
+                                                id="trackingNumber" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div th:if="${orderHeader.promoCode != null}" class="row my-1">
+                                        <div class="col-3 text-success fw-bold">Khuyến mãi</div>
+                                        <div class="col-9">
+                                            <input th:value="${orderHeader.promoCode}" readonly
+                                                class="form-control bg-light" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-5 offset-lg-1">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-primary">Tóm tắt đơn hàng</span>
+                                    </h4>
+                                    <div class="badge bg-secondary p-2 w-100 mb-3 fs-6"
+                                        th:text="'Trạng thái: ' + ${orderHeader.orderStatus}"></div>
+
+                                    <ul class="list-group mb-3">
+                                        <li th:each="detail : ${orderDetails}"
+                                            class="list-group-item d-flex justify-content-between p-2">
+                                            <div class="row container">
+                                                <div class="col-8">
+                                                    <h6 class="my-0 text-primary" th:text="${detail.product.title}">
+                                                    </h6>
+                                                    <small class="text-muted"
+                                                        th:text="'Giá: ' + ${#numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></small><br />
+                                                    <small class="text-muted"
+                                                        th:text="'Số lượng: ' + ${detail.count}"></small>
+                                                </div>
+                                                <div class="col-4 text-end">
+                                                    <p class="text-success"
+                                                        th:text="${#numbers.formatDecimal(detail.count * detail.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li th:if="${orderHeader.discountAmount > 0}"
+                                            class="list-group-item d-flex justify-content-between bg-light p-2">
+                                            <div class="text-success">
+                                                <h6 class="my-0"
+                                                    th:text="'Giảm giá (' + ${orderHeader.promoCode} + ')'"></h6>
+                                            </div>
+                                            <span class="text-success"
+                                                th:text="'-' + ${#numbers.formatDecimal(orderHeader.discountAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                                        </li>
+                                        <li class="list-group-item bg-secondary text-white">
+                                            <div class="row container">
+                                                <div class="col-6">
+                                                    <h5 class="text-white">THỰC THU</h5>
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    <h5 class="text-white"
+                                                        th:text="${#numbers.formatDecimal(orderHeader.orderTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <div th:if="${orderHeader.orderStatus == 'Approved'}">
+                                        <button type="submit" name="status" value="InProcess"
+                                            class="btn btn-primary form-control my-1">Bắt đầu xử lý</button>
+                                    </div>
+                                    <div th:if="${orderHeader.orderStatus == 'InProcess'}">
+                                        <button type="submit" name="status" value="Shipped"
+                                            onclick="return validateShippingInput()"
+                                            class="btn btn-success form-control my-1">Xác nhận giao hàng</button>
+                                    </div>
+                                    <div
+                                        th:if="${orderHeader.orderStatus != 'Cancelled' && orderHeader.orderStatus != 'Shipped'}">
+                                        <button type="submit" name="status" value="Cancelled"
+                                            class="btn btn-danger form-control my-1">Hủy đơn hàng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script>
+            function validateShippingInput() {
+                if (document.getElementById("trackingNumber").value == "") {
+                    toastr.error('Vui lòng nhập mã vận đơn');
+                    return false;
+                }
+                if (document.getElementById("carrier").value == "") {
+                    toastr.error('Vui lòng nhập đơn vị vận chuyển');
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </div>
+</body>
+
+</html>

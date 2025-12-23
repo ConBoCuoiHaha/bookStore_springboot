@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Danh Sách Đơn Hàng - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Danh Sách Đơn Hàng</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên khách hàng</th>
+                            <th>Số điện thoại</th>
+                            <th>Email</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng tiền</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="obj : ${orderHeaders}">
+                            <td th:text="${obj.id}"></td>
+                            <td th:text="${obj.name}"></td>
+                            <td th:text="${obj.phoneNumber}"></td>
+                            <td th:text="${obj.applicationUser.email}"></td>
+                            <td>
+                                <span class="badge"
+                                    th:classappend="${obj.orderStatus == 'Shipped' ? 'bg-success' : (obj.orderStatus == 'Cancelled' ? 'bg-danger' : 'bg-warning')}"
+                                    th:text="${obj.orderStatus}"></span>
+                            </td>
+                            <td th:text="${#numbers.formatDecimal(obj.orderTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+                            <td>
+                                <a th:href="@{/admin/order/details/{id}(id=${obj.id})}"
+                                    class="btn btn-primary border-0">
+                                    <i class="bi bi-pencil-square"></i> Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

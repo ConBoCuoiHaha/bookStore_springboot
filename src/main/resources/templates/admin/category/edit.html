@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Sửa Thể Loại - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-primary bg-gradient text-light py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-white py-2">Sửa Thể Loại</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/admin/category/edit}" th:object="${category}" method="post" class="row">
+                    <input type="hidden" th:field="*{id}" />
+                    <div class="border p-3">
+                        <div class="form-floating py-2 col-12">
+                            <input th:field="*{name}" class="form-control border-0 shadow" />
+                            <label th:for="name" class="ms-2">Tên thể loại</label>
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input th:field="*{displayOrder}" class="form-control border-0 shadow" />
+                            <label th:for="displayOrder" class="ms-2">Thứ tự hiển thị</label>
+                            <span th:if="${#fields.hasErrors('displayOrder')}" th:errors="*{displayOrder}"
+                                class="text-danger"></span>
+                        </div>
+
+                        <div class="row pt-2">
+                            <div class="col-6 col-md-3">
+                                <button type="submit" class="btn btn-primary form-control">Cập nhật</button>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a th:href="@{/admin/category}" class="btn btn-outline-primary border form-control">
+                                    Quay lại danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

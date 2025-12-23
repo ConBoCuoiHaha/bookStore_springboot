@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Đơn Hàng Của Tôi - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Đơn Hàng Của Tôi</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Ngày Đặt</th>
+                            <th>Tổng Tiền</th>
+                            <th>Trạng Thái</th>
+                            <th>Vận Chuyển</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="obj : ${orderList}">
+                            <td th:text="${obj.id}"></td>
+                            <td th:text="${#temporals.format(obj.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="fw-bold"
+                                th:text="${#numbers.formatDecimal(obj.orderTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+                            <td>
+                                <span th:if="${obj.orderStatus == 'Shipped'}" class="badge bg-success rounded-pill px-3"
+                                    th:text="${obj.orderStatus}"></span>
+                                <span th:if="${obj.orderStatus == 'Cancelled'}"
+                                    class="badge bg-danger rounded-pill px-3" th:text="${obj.orderStatus}"></span>
+                                <span th:if="${obj.orderStatus != 'Shipped' && obj.orderStatus != 'Cancelled'}"
+                                    class="badge bg-info text-dark rounded-pill px-3"
+                                    th:text="${obj.orderStatus}"></span>
+                            </td>
+                            <td>
+                                <div th:if="${obj.carrier != null && !obj.carrier.isEmpty()}">
+                                    <span class="small" th:text="${obj.carrier}"></span><br />
+                                    <small class="text-muted" th:text="${obj.trackingNumber}"></small>
+                                </div>
+                                <div th:if="${obj.carrier == null || obj.carrier.isEmpty()}">
+                                    <span class="text-muted small">Chờ xử lý</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/customer/order/details(id=${obj.id})}"
+                                    class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye"></i> Xem chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${orderList.isEmpty()}">
+                            <td colspan="6" class="text-center py-5">
+                                <i class="bi bi-bag-x fs-1 text-muted"></i>
+                                <p class="mt-2">Bạn chưa có đơn hàng nào.</p>
+                                <a th:href="@{/}" class="btn btn-primary mt-2">Mua sắm ngay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Danh Sách Sản Phẩm - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 py-2">Danh Sách Sản Phẩm</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row pb-3">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6 text-end">
+                        <a th:href="@{/admin/product/upsert}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Thêm sản phẩm mới
+                        </a>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th>ISBN</th>
+                            <th>Giá bán</th>
+                            <th>Tồn kho</th>
+                            <th>Tác giả</th>
+                            <th>Thể loại</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="obj : ${productList}">
+                            <td th:text="${obj.title}"></td>
+                            <td th:text="${obj.isbn}"></td>
+                            <td th:text="${#numbers.formatDecimal(obj.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+                            <td th:text="${obj.stockCount}"></td>
+                            <td th:text="${obj.author}"></td>
+                            <td th:text="${obj.subcategory.category.name} + ' / ' + ${obj.subcategory.name}"></td>
+                            <td>
+                                <div class="w-100 btn-group" role="group">
+                                    <a th:href="@{/admin/product/upsert(id=${obj.id})}" class="btn btn-primary mx-1">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button th:onclick="'deleteProduct(' + ${obj.id} + ')'" class="btn btn-danger mx-1">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            function deleteProduct(id) {
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                    $.ajax({
+                        url: '/admin/product/delete/' + id,
+                        type: 'DELETE',
+                        success: function (data) {
+                            if (data === 'success') {
+                                location.reload();
+                            } else {
+                                alert('Có lỗi xảy ra khi xóa sản phẩm.');
+                            }
+                        }
+                    });
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Sản Phẩm - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 my-4">
+            <div class="card-header bg-white border-bottom ml-0 py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-secondary opacity-75 pt-2"
+                            th:text="${productVM.product.id != null && productVM.product.id != 0 ? 'Cập Nhật' : 'Thêm Mới'} + ' Sản Phẩm'">
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/admin/product/upsert}" th:object="${productVM}" method="post" class="row"
+                    enctype="multipart/form-data">
+                    <input th:field="*{product.id}" type="hidden" />
+                    <input th:field="*{product.imageUrl}" type="hidden" />
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="border p-3">
+                                <div class="form-floating py-2 col-12">
+                                    <input th:field="*{product.title}" class="form-control border-0 shadow" />
+                                    <label th:for="product.title" class="ms-2">Tiêu đề</label>
+                                    <span th:if="${#fields.hasErrors('product.title')}" th:errors="*{product.title}"
+                                        class="text-danger"></span>
+                                </div>
+                                <div class="py-2 col-12">
+                                    <label th:for="product.description" class="ms-2 text-muted">Mô tả</label>
+                                    <textarea th:field="*{product.description}"
+                                        class="form-control border-0 shadow"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="form-floating py-2 col-6">
+                                        <input th:field="*{product.isbn}" class="form-control border-0 shadow" />
+                                        <label th:for="product.isbn" class="ms-2">Mã ISBN</label>
+                                        <span th:if="${#fields.hasErrors('product.isbn')}" th:errors="*{product.isbn}"
+                                            class="text-danger"></span>
+                                    </div>
+                                    <div class="form-floating py-2 col-6">
+                                        <input th:field="*{product.author}" class="form-control border-0 shadow" />
+                                        <label th:for="product.author" class="ms-2">Tác giả</label>
+                                        <span th:if="${#fields.hasErrors('product.author')}"
+                                            th:errors="*{product.author}" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.listPrice}" class="form-control border-0 shadow" />
+                                        <label th:for="product.listPrice" class="ms-2">Giá niêm yết</label>
+                                        <span th:if="${#fields.hasErrors('product.listPrice')}"
+                                            th:errors="*{product.listPrice}" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.price}" class="form-control border-0 shadow" />
+                                        <label th:for="product.price" class="ms-2">Giá bán</label>
+                                        <span th:if="${#fields.hasErrors('product.price')}" th:errors="*{product.price}"
+                                            class="text-danger"></span>
+                                    </div>
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.stockCount}" class="form-control border-0 shadow" />
+                                        <label th:for="product.stockCount" class="ms-2">Số lượng tồn</label>
+                                        <span th:if="${#fields.hasErrors('product.stockCount')}"
+                                            th:errors="*{product.stockCount}" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.publisherName}"
+                                            class="form-control border-0 shadow" />
+                                        <label th:for="product.publisherName" class="ms-2">Nhà xuất bản</label>
+                                    </div>
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.publishYear}" class="form-control border-0 shadow" />
+                                        <label th:for="product.publishYear" class="ms-2">Năm xuất bản</label>
+                                        <span th:if="${#fields.hasErrors('product.publishYear')}"
+                                            th:errors="*{product.publishYear}" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-floating py-2 col-4">
+                                        <input th:field="*{product.weight}" class="form-control border-0 shadow" />
+                                        <label th:for="product.weight" class="ms-2">Trọng lượng (gram)</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-floating py-2 col-12">
+                                        <input th:field="*{product.dimensions}" class="form-control border-0 shadow" />
+                                        <label th:for="product.dimensions" class="ms-2">Kích thước (cm)</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-floating py-2 col-6">
+                                        <select id="CategoryId" th:field="*{selectedCategoryId}"
+                                            class="form-select border-0 shadow">
+                                            <option value="0" disabled selected>--Chọn Danh Mục Cha--</option>
+                                            <option th:each="cat : ${productVM.categoryList}" th:value="${cat.id}"
+                                                th:text="${cat.name}"></option>
+                                        </select>
+                                        <label th:for="selectedCategoryId" class="ms-2">Danh mục cha</label>
+                                    </div>
+                                    <div class="form-floating py-2 col-6">
+                                        <select id="SubcategoryId" th:field="*{product.subcategory.id}"
+                                            class="form-select border-0 shadow">
+                                            <option value="0" disabled selected>--Chọn Danh Mục Con--</option>
+                                            <option th:each="sub : ${productVM.subcategoryList}" th:value="${sub.id}"
+                                                th:text="${sub.name}"></option>
+                                        </select>
+                                        <label th:for="product.subcategory.id" class="ms-2">Danh mục con</label>
+                                        <span th:if="${#fields.hasErrors('product.subcategory.id')}"
+                                            th:errors="*{product.subcategory.id}" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-floating py-2 col-12">
+                                    <input type="file" name="file" class="form-control border-0 shadow" />
+                                    <label class="ms-2">Ảnh sản phẩm</label>
+                                </div>
+                                <div class="row pt-2">
+                                    <div class="col-6 col-md-3">
+                                        <button type="submit" class="btn btn-primary form-control"
+                                            th:text="${productVM.product.id != null && productVM.product.id != 0 ? 'Cập Nhật' : 'Tạo Mới'}"></button>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <a th:href="@{/admin/product}"
+                                            class="btn btn-outline-primary border form-control">
+                                            Quay lại danh sách
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img th:if="${productVM.product.imageUrl != null}" th:src="${productVM.product.imageUrl}"
+                                width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
+        <script>
+            tinymce.init({
+                selector: 'textarea',
+                plugins: 'anchor autolink charmap codesample emoticons lists table visualblocks wordcount',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | align lineheight | numlist bullist indent outdent',
+                branding: false,
+                promotion: false
+            });
+
+            $(document).ready(function () {
+                $('#CategoryId').change(function () {
+                    var categoryId = $(this).val();
+                    if (categoryId > 0) {
+                        $.getJSON('/admin/product/getsubcategories', { categoryId: categoryId }, function (data) {
+                            var items = '<option value="0" disabled selected>--Chọn Danh Mục Con--</option>';
+                            $('#SubcategoryId').empty();
+                            $.each(data, function (i, subcategory) {
+                                items += "<option value='" + subcategory.id + "'>" + subcategory.name + "</option>";
+                            });
+                            $('#SubcategoryId').html(items);
+                        });
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+
+</html>

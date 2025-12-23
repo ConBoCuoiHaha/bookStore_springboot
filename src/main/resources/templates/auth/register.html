@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Đăng Ký - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-primary bg-gradient text-white text-center py-4">
+                        <h4 class="mb-0">Tham Gia BookStoreVN</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/register}" th:object="${user}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input th:field="*{name}" class="form-control" placeholder="Họ tên" required>
+                                        <label th:for="name">Họ Tên</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input th:field="*{email}" type="email" class="form-control" placeholder="Email"
+                                            required>
+                                        <label th:for="email">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input th:field="*{password}" type="password" class="form-control"
+                                            placeholder="Mật khẩu" required>
+                                        <label th:for="password">Mật khẩu</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input th:field="*{phoneNumber}" class="form-control"
+                                            placeholder="Số điện thoại">
+                                        <label th:for="phoneNumber">Số Điện Thoại</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input th:field="*{streetAddress}" class="form-control" placeholder="Địa chỉ">
+                                <label th:for="streetAddress">Địa Chỉ</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-floating">
+                                        <input th:field="*{city}" class="form-control" placeholder="Thành phố">
+                                        <label th:for="city">Thành Phố</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-floating">
+                                        <input th:field="*{postalCode}" class="form-control" placeholder="Mã bưu điện">
+                                        <label th:for="postalCode">Mã Bưu Điện</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2 fs-5 bg-gradient border-0">Đăng
+                                Ký</button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3 bg-light">
+                        <span>Đã có tài khoản? <a th:href="@{/login}"
+                                class="text-primary text-decoration-none fw-bold">Đăng nhập ngay</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Env
+.env
+
+# Local uploads
+src/main/resources/static/images/product/

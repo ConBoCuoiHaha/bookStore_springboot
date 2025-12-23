@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title th:text="${detailsVM.shoppingCart.product.title} + ' - BookStoreVN'"></title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <form th:action="@{/details}" th:object="${detailsVM}" method="post">
+            <input hidden th:field="*{shoppingCart.product.id}" />
+            <div class="card shadow border-0 mt-4 mb-4">
+                <div class="card-header bg-white border-bottom py-4">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h3 class="text-secondary opacity-75 text-uppercase"
+                                th:text="*{shoppingCart.product.title}"></h3>
+                            <p class="text-muted fw-semibold mb-0" th:text="'bởi ' + *{shoppingCart.product.author}">
+                            </p>
+                            <div th:if="*{averageRating > 0}" class="mt-2">
+                                <i th:each="i : ${#numbers.sequence(1, 5)}" class="bi bi-star-fill"
+                                    th:classappend="${i <= #math.round(detailsVM.averageRating) ? 'text-warning' : 'text-muted opacity-25'}"></i>
+                                <span class="ms-1 text-muted small"
+                                    th:text="'(' + ${#numbers.formatDecimal(detailsVM.averageRating, 1, 1)} + ')'"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="py-3">
+                        <div class="row">
+                            <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                                <a th:href="@{/}"
+                                    class="btn btn-outline-secondary mb-5 fw-semibold btn-sm text-uppercase">
+                                    <small>Quay lại</small>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 pb-4 text-center">
+                                <img th:if="*{shoppingCart.product.imageUrl != null}"
+                                    th:src="*{shoppingCart.product.imageUrl}" width="80%" class="rounded shadow-sm" />
+                                <img th:if="*{shoppingCart.product.imageUrl == null}"
+                                    src="https://placehold.co/500x700/png?text=Sach+Chua+Co+Anh" width="80%"
+                                    class="rounded shadow-sm" />
+                            </div>
+                            <div class="col-12 col-md-6 pb-4">
+                                <div class="row ps-2">
+                                    <span class="badge p-2 bg-secondary text-uppercase mb-2" style="width:fit-content"
+                                        th:text="*{shoppingCart.product.subcategory.category.name} + ' / ' + *{shoppingCart.product.subcategory.name}">
+                                    </span>
+                                </div>
+                                <div class="row ps-2 mt-2">
+                                    <h6 class="text-dark text-opacity-50"
+                                        th:text="'Mã ISBN: ' + *{shoppingCart.product.isbn}"></h6>
+                                    <h6 th:if="*{shoppingCart.product.publisherName != null}"
+                                        class="text-dark text-opacity-50"
+                                        th:text="'Nhà xuất bản: ' + *{shoppingCart.product.publisherName}"></h6>
+                                    <h6 th:if="*{shoppingCart.product.publishYear > 0}"
+                                        class="text-dark text-opacity-50"
+                                        th:text="'Năm xuất bản: ' + *{shoppingCart.product.publishYear}"></h6>
+                                    <h6 class="text-dark text-opacity-75 mt-2">Trình trạng:
+                                        <span
+                                            th:class="*{shoppingCart.product.stockCount > 0 ? 'text-success' : 'text-danger'}"
+                                            th:text="*{shoppingCart.product.stockCount > 0 ? 'Còn hàng (' + shoppingCart.product.stockCount + ')' : 'Hết hàng'}">
+                                        </span>
+                                    </h6>
+                                    <h6 th:if="*{shoppingCart.product.weight > 0}"
+                                        class="text-dark text-opacity-50 mt-1 small"
+                                        th:text="'Khối lượng: ' + *{shoppingCart.product.weight} + ' gram'"></h6>
+                                    <h6 th:if="*{shoppingCart.product.dimensions != null}"
+                                        class="text-dark text-opacity-50 small"
+                                        th:text="'Kích thước: ' + *{shoppingCart.product.dimensions}"></h6>
+                                </div>
+                                <div class="row ps-2 mt-3">
+                                    <h6 class="text-dark text-opacity-50 pb-2">
+                                        Giá niêm yết:
+                                        <span class="text-decoration-line-through"
+                                            th:text="${#numbers.formatDecimal(detailsVM.shoppingCart.product.listPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                                    </h6>
+                                </div>
+                                <div class="row ps-2">
+                                    <div class="p-1 col-3 col-lg-3 bg-light border-bottom">
+                                        <div class="text-secondary fw-semibold">Giá bán</div>
+                                    </div>
+                                    <div class="p-1 col-3 col-lg-3 bg-light border-bottom">
+                                        <div class="text-primary fw-bold fs-5"
+                                            th:text="${#numbers.formatDecimal(detailsVM.shoppingCart.product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ps-2 my-3">
+                                    <p class="text-secondary lh-sm" th:utext="*{shoppingCart.product.description}"></p>
+                                </div>
+                                <div class="row ps-2 mb-3">
+                                    <div class="col-md-4">
+                                        <div class="input-group mb-3">
+                                            <span
+                                                class="input-group-text bg-secondary text-white border-0 fw-semibold">Số
+                                                lượng</span>
+                                            <input th:field="*{shoppingCart.count}" type="number"
+                                                class="form-control text-end" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 pb-1">
+                                        <button type="submit"
+                                            th:class="*{shoppingCart.product.stockCount > 0 ? 'btn btn-primary' : 'btn btn-secondary disabled'} + ' w-100 py-2 text-uppercase fw-semibold'">
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Section -->
+                    <div class="row mt-5">
+                        <div class="col-12 offset-lg-1 col-lg-10">
+                            <h4 class="text-secondary border-bottom pb-3 mb-4">Đánh giá từ khách hàng</h4>
+
+                            <div th:if="${!#lists.isEmpty(detailsVM.reviews)}">
+                                <div th:each="review : ${detailsVM.reviews}"
+                                    class="review-item mb-4 pb-3 border-bottom">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <span class="fw-bold" th:text="${review.applicationUser.name}"></span>
+                                            <span class="text-muted small ms-2"
+                                                th:text="'- ' + ${#temporals.format(review.reviewDate, 'dd/MM/yyyy')}"></span>
+                                        </div>
+                                        <div class="text-warning">
+                                            <i th:each="i : ${#numbers.sequence(1, 5)}" class="bi"
+                                                th:classappend="${i <= review.rating ? 'bi-star-fill' : 'bi-star'}"></i>
+                                        </div>
+                                    </div>
+                                    <p class="text-secondary mb-0" th:text="${review.comment}"></p>
+                                </div>
+                            </div>
+                            <p th:if="${#lists.isEmpty(detailsVM.reviews)}" class="text-muted italic">Chưa có đánh giá
+                                nào cho sản phẩm này.</p>
+
+                            <div sec:authorize="isAuthenticated()">
+                                <div th:if="*{hasOrdered}" class="bg-light p-4 rounded-3 mt-4 border">
+                                    <h5>Để lại đánh giá của bạn</h5>
+                                    <form th:action="@{/postReview}" method="post">
+                                        <input type="hidden" name="productId" th:value="*{shoppingCart.product.id}" />
+                                        <div class="mb-3">
+                                            <label class="form-label">Xếp hạng:</label>
+                                            <div class="rating-input h3 text-warning">
+                                                <i th:each="i : ${#numbers.sequence(1, 5)}"
+                                                    class="bi bi-star rating-star" th:data-value="${i}"
+                                                    style="cursor:pointer"></i>
+                                                <input type="hidden" name="rating" id="ratingValue" value="5" />
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Bình luận:</label>
+                                            <textarea name="comment" class="form-control" rows="3" required
+                                                placeholder="Cảm nhận của bạn về cuốn sách..."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                                    </form>
+                                </div>
+                                <div th:if="${!detailsVM.hasOrdered}" class="alert alert-info mt-4">
+                                    <i class="bi bi-info-circle me-2"></i>Bạn cần mua sản phẩm này để có thể để lại đánh
+                                    giá.
+                                </div>
+                            </div>
+                            <div sec:authorize="!isAuthenticated()" class="alert alert-secondary mt-4">
+                                <a th:href="@{/login}">Đăng nhập</a> để để lại đánh giá.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            $(document).ready(function () {
+                $('.rating-star').click(function () {
+                    var value = $(this).data('value');
+                    $('#ratingValue').val(value);
+
+                    $('.rating-star').each(function () {
+                        if ($(this).data('value') <= value) {
+                            $(this).removeClass('bi-star').addClass('bi-star-fill');
+                        } else {
+                            $(this).removeClass('bi-star-fill').addClass('bi-star');
+                        }
+                    });
+                });
+
+                // Set default 5 stars
+                $('.rating-star').each(function () {
+                    if ($(this).data('value') <= 5) {
+                        $(this).removeClass('bi-star').addClass('bi-star-fill');
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+
+</html>

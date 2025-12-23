@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Đặt hàng thành công - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="container row">
+            <div class="col-12 text-center">
+                <h1 class="text-primary text-center">Đặt hàng thành công!</h1>
+                <div class="row pt-4">
+                    <div class="col-12 text-center text-success">
+                        <i class="bi bi-check-circle-fill" style="font-size: 8rem;"></i>
+                    </div>
+                </div>
+                <br />
+                <div class="text-center">
+                    Cảm ơn bạn đã mua hàng tại <strong>BookStoreVN</strong>!<br />
+                    Mã đơn hàng của bạn là: <strong th:text="'#' + ${id}"></strong> <br /><br />
+                    Chúng tôi sẽ sớm kiểm tra và giao hàng cho bạn.
+                    <div class="mt-4">
+                        <a th:href="@{/}" class="btn btn-primary bg-gradient border-0 px-5 rounded-pill">Tiếp tục mua
+                            sắm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

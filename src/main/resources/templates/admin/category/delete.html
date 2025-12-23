@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Xóa Thể Loại - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-danger bg-gradient text-light py-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-white py-2">Xóa Thể Loại</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/admin/category/delete}" method="post" class="row">
+                    <input type="hidden" name="id" th:value="${category.id}" />
+                    <div class="border p-3">
+                        <div class="form-floating py-2 col-12">
+                            <input th:value="${category.name}" class="form-control border-0 shadow" disabled />
+                            <label class="ms-2">Tên thể loại</label>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input th:value="${category.displayOrder}" class="form-control border-0 shadow" disabled />
+                            <label class="ms-2">Thứ tự hiển thị</label>
+                        </div>
+
+                        <div class="row pt-2">
+                            <div class="col-6 col-md-3">
+                                <button type="submit" class="btn btn-danger form-control">Xóa</button>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a th:href="@{/admin/category}" class="btn btn-outline-primary border form-control">
+                                    Quay lại danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

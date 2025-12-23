@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/_layout :: html}">
+
+<head>
+    <title>Home - BookStoreVN</title>
+</head>
+
+<body>
+    <div th:fragment="body_content">
+        <div class="row pb-3">
+            <h1 class="text-primary">Chào mừng bạn đến với BookStoreVN!</h1>
+            <p>Dưới đây là danh sách các cuốn sách mới nhất (Spring Boot Version)</p>
+
+            <div th:each="product : ${productList}" class="col-lg-3 col-sm-6">
+                <div class="row p-2">
+                    <div class="col-12 p-1">
+                        <div class="card border-0 p-3 shadow border-top border-5 rounded h-100">
+                            <a th:href="@{/details/{id}(id=${product.id})}">
+                                <img th:src="${product.imageUrl}" class="card-img-top rounded"
+                                    style="height: 350px; object-fit: cover;" />
+                            </a>
+                            <div class="card-body pb-0">
+                                <div class="pl-1">
+                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center"
+                                        th:text="${product.title}"></p>
+                                    <p class="card-title text-warning text-center">by <b
+                                            th:text="${product.author}"></b></p>
+                                </div>
+                                <div class="pl-1">
+                                    <p class="text-dark text-opacity-75 text-center mb-0">Giá bìa: <span
+                                            th:text="${#numbers.formatDecimal(product.listPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                                    </p>
+                                </div>
+                                <div class="pl-1">
+                                    <p class="text-dark text-opacity-75 text-center">Giá bán: <span
+                                            th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <a th:href="@{/details/{id}(id=${product.id})}"
+                                    class="btn btn-primary bg-gradient border-0 form-control">Chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
