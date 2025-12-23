@@ -3,6 +3,7 @@ package com.bookstorevn.controllers;
 import com.bookstorevn.models.ApplicationUser;
 import com.bookstorevn.repositories.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ public class AuthController {
 
     @Autowired
     private ApplicationUserRepository applicationUserRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login() {
@@ -36,7 +40,7 @@ public class AuthController {
         
         user.setId(UUID.randomUUID().toString());
         user.setRole("CUSTOMER");
-        // Password should be encoded here if using BCrypt
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         applicationUserRepository.save(user);
         
         redirectAttributes.addFlashAttribute("success", "Đăng ký thành công. Vui lòng đăng nhập.");

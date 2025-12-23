@@ -243,7 +243,7 @@ public class DbInitializer {
                 admin.setName("Admin Manager");
                 admin.setEmail("admin@admin");
                 admin.setUserName("admin@admin");
-                admin.setPassword("1234");
+                admin.setPassword(passwordEncoder.encode("1234"));
                 admin.setRole("ADMIN");
                 admin.setCity("Hồ Chí Minh");
 
@@ -252,7 +252,7 @@ public class DbInitializer {
                 customer.setName("Nguyễn Văn Khách");
                 customer.setEmail("customer@gmail.com");
                 customer.setUserName("customer@gmail.com");
-                customer.setPassword("1234");
+                customer.setPassword(passwordEncoder.encode("1234"));
                 customer.setRole("CUSTOMER");
                 customer.setCity("Hà Nội");
 
@@ -262,6 +262,10 @@ public class DbInitializer {
                 existingAdmin.setRole("ADMIN");
                 userRepository.save(existingAdmin);
                 System.out.println("Updated Admin role to ADMIN.");
+            } else if (existingAdmin.getPassword() != null && !isBcryptHash(existingAdmin.getPassword())) {
+                existingAdmin.setPassword(passwordEncoder.encode(existingAdmin.getPassword()));
+                userRepository.save(existingAdmin);
+                System.out.println("Updated Admin password to BCrypt.");
             }
             System.out.println("---- Seed Data check finished ----");
         };
@@ -275,6 +279,10 @@ public class DbInitializer {
                     category.setDisplayOrder(displayOrder);
                     return categoryRepository.save(category);
                 });
+    }
+
+    private boolean isBcryptHash(String password) {
+        return password.startsWith("$2a$") || password.startsWith("$2b$") || password.startsWith("$2y$");
     }
 
     private Subcategory ensureSubcategory(SubcategoryRepository subcategoryRepository, String name, Category category) {
@@ -295,6 +303,7 @@ public class DbInitializer {
         return true;
     }
 }
+
 
 
 
